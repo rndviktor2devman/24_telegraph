@@ -14,7 +14,7 @@ class Post(db.Model):
     update_date = db.Column(db.DateTime)
     passphrase = db.Column(db.Strin(80))
 
-    def __init__(self, author, title, text, date=None, passphrase=None):
+    def __init__(self, author, title, text, passphrase=None, date=None):
         self.author = author
         self.title = title
         self.text = text
