@@ -12,7 +12,7 @@ class Post(db.Model):
     title = db.Column(db.String(120))
     text = db.Column(db.Text)
     update_date = db.Column(db.DateTime)
-    passphrase = db.Column(db.Strin(80))
+    passphrase = db.Column(db.String(80))
 
     def __init__(self, author, title, text, passphrase=None, date=None):
         self.author = author
