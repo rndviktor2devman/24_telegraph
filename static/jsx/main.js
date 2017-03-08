@@ -40,27 +40,50 @@ var PostsEditor = React.createClass({
           author:'',
           story: '',
           passphrase: '',
-          editMode: true
+          editMode: false
       };
     },
+
+    handlePassphrase: function(event){
+        this.setState({passphrase:event.target.value})
+    },
+
+    handleTitle: function(event){
+        if(this.state.editMode){
+            this.setState({title:event.target.value})
+        }
+    },
+
+    handleAuthor: function (event) {
+        if(this.state.editMode){
+            this.setState({author:event.target.value})
+        }
+    },
+
+    handleStory: function (event) {
+        if(this.state.editMode){
+            this.setState({story:event.target.value})
+        }
+    },
+
 
     render: function () {
         return(
             <div>
                 <div className="form-group">
-                  <input className="form-control" placeholder="Заголовок"/>
+                    <input className="form-control" placeholder="Заголовок" value={this.state.title} onChange={this.handleTitle}/>
                 </div>
                 <div className="form-group">
-                  <input className="form-control" placeholder="Подпись"/>
+                    <input className="form-control"  placeholder="Подпись" value={this.state.author} onChange={this.handleAuthor}/>
                 </div>
                 <div className="form-group">
-                  <textarea className="form-control" rows="10" placeholder="Ваша история"/>
+                  <textarea className="form-control"  rows="10" placeholder="Ваша история" value={this.state.story} onChange={this.handleStory}/>
                 </div>
                 <div className="form-group">
-                    <input name="passphrase" className="form-control" type="password" placeholder="Пароль для редактирования"/>
+                    <input name="passphrase" className="form-control" type="password" onChange={this.handlePassphrase} placeholder="Пароль для редактирования(на случай утери cookies)" value={this.state.passphrase}/>
                 </div>
                 <div className="form-group">
-                  <button className="btn btn-primary" type="submit">Опубликовать</button>
+                  <button className="btn btn-primary" disabled={!this.state.editMode} type="submit">Опубликовать</button>
                 </div>
             </div>
         )
