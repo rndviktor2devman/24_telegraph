@@ -6,6 +6,22 @@ var PostsList = React.createClass({displayName: "PostsList",
       return { searchString: '' };
     },
 
+    componentDidMount: function () {
+        sendUrl = '/get_posts';
+        $.ajax({
+          url: sendUrl,
+          dataType: 'json',
+          cache: false,
+          success: function(data) {
+              var posts_data = data.data
+              console.log(posts_data)
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+
     handleChange: function(event){
         this.setState({searchString:event.target.value})
     },
@@ -43,6 +59,62 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           passphrase: '',
           editMode: false
       };
+    },
+
+    componentDidMount: function () {
+        console.log(this.props.url);
+        console.log(document.URL);
+        console.log(document.location.host);
+        console.log(window.location.href);
+        var sendUrl = this.props.url;
+        if(!sendUrl)
+        {
+            sendUrl = document.URL + 'empty_post'
+        }
+        else
+        {
+            sendUrl = sendUrl + '/select_data'
+        }
+
+        $.ajax({
+          url: sendUrl,
+          dataType: 'json',
+          cache: false,
+          success: function(data) {
+              this.setState({
+                  title: data.data.title,
+                  author: data.data.author,
+                  story: data.data.story,
+                  passphrase: '',
+                  editMode: data.data.editMode
+              })
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+
+    submitPost: function () {
+        var sendUrl = this.props.url;
+        if(!sendUrl)
+        {
+            sendUrl = document.URL
+        }
+        sendUrl = sendUrl + 'post';
+        document.cookie = "id=" + Date.now().toString(32);
+        $.ajax({
+          url: sendUrl,
+          type: 'POST',
+          data: JSON.stringify(this.state),
+          contentType: 'application/json;charset=UTF-8',
+          success: function(data) {
+            console.log(data)
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
     },
 
     handlePassphrase: function(event){
@@ -84,7 +156,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                     React.createElement("input", {name: "passphrase", className: "form-control", type: "password", onChange: this.handlePassphrase, placeholder: "Пароль для редактирования(на случай утери cookies)", value: this.state.passphrase})
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                  React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, type: "submit"}, "Опубликовать")
+                  React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, onClick: this.submitPost, type: "submit"}, "Опубликовать")
                 )
             )
         )
