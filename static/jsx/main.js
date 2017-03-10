@@ -68,7 +68,7 @@ var PostsEditor = React.createClass({
     },
 
     componentDidMount: function () {
-        sendUrl = document.URL;
+        var sendUrl = document.URL;
         if(window.location.pathname == '/')
         {
             sendUrl += 'empty_post'
