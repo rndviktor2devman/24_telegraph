@@ -2,7 +2,10 @@
 var PostsList = React.createClass({
     // sets initial state
     getInitialState: function(){
-      return { searchString: '' };
+      return {
+          posts: [],
+          searchString: ''
+      };
     },
 
     componentDidMount: function () {
@@ -12,8 +15,11 @@ var PostsList = React.createClass({
           dataType: 'json',
           cache: false,
           success: function(data) {
-              var posts_data = data.data;
-              console.log(posts_data)
+              var search_data = data.data;
+              search_data.forEach(function (item) {
+                  item.link = window.location.origin + '/' + item.link;
+              });
+              this.setState({posts: search_data});
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -26,12 +32,12 @@ var PostsList = React.createClass({
     },
 
     render: function(){
-        var posts = this.props.items;
+        var posts = this.state.posts;
         var searchString = this.state.searchString.trim().toLowerCase();
 
         if(searchString.length > 0){
             posts = posts.filter(function (post) {
-                return post.name.toLowerCase().match( searchString );
+                return post.title.toLowerCase().match( searchString );
             })
         }
 
@@ -39,8 +45,9 @@ var PostsList = React.createClass({
             <div>
                 <input type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Поиск"/>
                 <ul>
-                    {posts.map(function (post) {
-                        return <li>{post.name}</li>
+                    {
+                        posts.map(function (post) {
+                            return <li><a href={post.link}>{post.title}</a></li>
                     })}
                 </ul>
             </div>
@@ -61,13 +68,13 @@ var PostsEditor = React.createClass({
     },
 
     componentDidMount: function () {
+        sendUrl = document.URL;
         if(window.location.pathname == '/')
         {
-            sendUrl = document.URL + 'empty_post'
+            sendUrl += 'empty_post'
         }
         else
         {
-            sendUrl = document.URL;
             if(sendUrl.substr(sendUrl.length - 1) !== '/')
             {
                 sendUrl += '/'
@@ -162,10 +169,8 @@ var PostsEditor = React.createClass({
     }
 });
 
-var posts = [];
-
 ReactDOM.render(
-    <PostsList items={ posts }/>,
+    <PostsList/>,
     document.getElementById('search_panel')
 );
 

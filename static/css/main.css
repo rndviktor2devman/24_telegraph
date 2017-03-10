@@ -72,6 +72,11 @@ input {
   margin-bottom: 20px;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 
 ul {
     color: black;
