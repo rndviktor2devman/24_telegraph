@@ -13,7 +13,7 @@ var PostsList = React.createClass({displayName: "PostsList",
           dataType: 'json',
           cache: false,
           success: function(data) {
-              var posts_data = data.data
+              var posts_data = data.data;
               console.log(posts_data)
           }.bind(this),
           error: function(xhr, status, err) {
@@ -62,18 +62,19 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
     },
 
     componentDidMount: function () {
-        console.log(this.props.url);
-        console.log(document.URL);
-        console.log(document.location.host);
-        console.log(window.location.href);
-        var sendUrl = this.props.url;
-        if(!sendUrl)
+        console.log(window.location.pathname)
+        if(window.location.pathname == '/')
         {
             sendUrl = document.URL + 'empty_post'
         }
         else
         {
-            sendUrl = sendUrl + '/select_data'
+            sendUrl = document.URL;
+            if(sendUrl.substr(sendUrl.length - 1) !== '/')
+            {
+                sendUrl += '/'
+            }
+            sendUrl += 'select_data'
         }
 
         $.ajax({

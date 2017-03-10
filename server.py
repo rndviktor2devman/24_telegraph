@@ -42,8 +42,18 @@ def select_post(post_id):
 
 
 @app.route('/<post_id>/select_data', methods=['GET'])
-def select_post_data():
-    return None
+def select_post_data(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    editMode = False
+    if request.cookies is not None and 'id' in request.cookies:
+        editMode = post.cookie_id == request.cookies['id']
+    response_data = {
+        'title': post.title,
+        'author': post.author,
+        'story': post.text,
+        'editMode': editMode
+    }
+    return json.dumps({'status': 'ok', 'data': response_data})
 
 
 @app.route('/post', methods=['POST'])

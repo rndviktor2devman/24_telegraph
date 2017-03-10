@@ -12,7 +12,7 @@ var PostsList = React.createClass({
           dataType: 'json',
           cache: false,
           success: function(data) {
-              var posts_data = data.data
+              var posts_data = data.data;
               console.log(posts_data)
           }.bind(this),
           error: function(xhr, status, err) {
@@ -61,10 +61,18 @@ var PostsEditor = React.createClass({
     },
 
     componentDidMount: function () {
-        var sendUrl = this.props.url;
-        if(!sendUrl)
+        if(window.location.pathname == '/')
         {
             sendUrl = document.URL + 'empty_post'
+        }
+        else
+        {
+            sendUrl = document.URL;
+            if(sendUrl.substr(sendUrl.length - 1) !== '/')
+            {
+                sendUrl += '/'
+            }
+            sendUrl += 'select_data'
         }
 
         $.ajax({
