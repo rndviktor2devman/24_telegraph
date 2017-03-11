@@ -77,6 +77,34 @@ a {
   text-decoration: inherit;
 }
 
+h1 {
+    font-size: 20px;
+    color: black;
+    border: 0 none;
+    margin: 10px;
+}
+
+h3 {
+    font-size: 16px;
+    color: black;
+    border: 0 none;
+    margin: 10px;
+}
+
+.non-resize-text-area{
+    resize: none;
+    border: 1px solid white;
+    box-shadow: inset .3em 0 white,
+                inset 0 -.3em 0 white,
+                inset 0 .3em white,
+                inset 0 -.3em white;
+    -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 
 ul {
     color: black;

@@ -63,7 +63,7 @@ var PostsEditor = React.createClass({
           author:'',
           story: '',
           passphrase: '',
-          editMode: false
+          mode: 'create'
       };
     },
 
@@ -147,17 +147,33 @@ var PostsEditor = React.createClass({
 
 
     render: function () {
+        var editMode = this.state.mode == 'edit';
+        var createMode = this.state.mode == 'create';
         return(
             <div>
-                <div className="form-group">
-                    <input className="form-control" placeholder="Заголовок" value={this.state.title} onChange={this.handleTitle}/>
+                {editMode?(
+                    <div>
+                        <div className="form-group">
+                            <input className="form-control" placeholder="Заголовок" value={this.state.title} onChange={this.handleTitle}/>
+                        </div>
+                        <div className="form-group">
+                            <input className="form-control"  placeholder="Подпись" value={this.state.author} onChange={this.handleAuthor}/>
+                        </div>
+                        <div className="form-group">
+                          <textarea className="form-control"  rows="10" placeholder="Ваша история" value={this.state.story} onChange={this.handleStory}/>
+                        </div>
+                    </div>
+                ):(
+                <div>
+                    <div className="form-group">
+                        <h1>{this.state.title}</h1>
+                        <h3>{this.state.author}</h3>
+                    </div>
+                    <div className="form-group">
+                        <textarea className="form-control non-resize-text-area" rows="10" value={this.state.story}/>
+                    </div>
                 </div>
-                <div className="form-group">
-                    <input className="form-control"  placeholder="Подпись" value={this.state.author} onChange={this.handleAuthor}/>
-                </div>
-                <div className="form-group">
-                  <textarea className="form-control"  rows="10" placeholder="Ваша история" value={this.state.story} onChange={this.handleStory}/>
-                </div>
+                )}
                 <div className="form-group">
                     <input name="passphrase" className="form-control" type="password" onChange={this.handlePassphrase} placeholder="Пароль для редактирования(на случай утери cookies)" value={this.state.passphrase}/>
                 </div>

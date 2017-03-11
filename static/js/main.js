@@ -64,7 +64,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           author:'',
           story: '',
           passphrase: '',
-          editMode: false
+          mode: 'create'
       };
     },
 
@@ -148,16 +148,32 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
 
 
     render: function () {
+        var editMode = this.state.mode == 'edit';
+        var createMode = this.state.mode == 'create';
         return(
             React.createElement("div", null, 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {className: "form-control", placeholder: "Заголовок", value: this.state.title, onChange: this.handleTitle})
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {className: "form-control", placeholder: "Подпись", value: this.state.author, onChange: this.handleAuthor})
-                ), 
-                React.createElement("div", {className: "form-group"}, 
-                  React.createElement("textarea", {className: "form-control", rows: "10", placeholder: "Ваша история", value: this.state.story, onChange: this.handleStory})
+                editMode?(
+                    React.createElement("div", null, 
+                        React.createElement("div", {className: "form-group"}, 
+                            React.createElement("input", {className: "form-control", placeholder: "Заголовок", value: this.state.title, onChange: this.handleTitle})
+                        ), 
+                        React.createElement("div", {className: "form-group"}, 
+                            React.createElement("input", {className: "form-control", placeholder: "Подпись", value: this.state.author, onChange: this.handleAuthor})
+                        ), 
+                        React.createElement("div", {className: "form-group"}, 
+                          React.createElement("textarea", {className: "form-control", rows: "10", placeholder: "Ваша история", value: this.state.story, onChange: this.handleStory})
+                        )
+                    )
+                ):(
+                React.createElement("div", null, 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("h1", null, this.state.title), 
+                        React.createElement("h3", null, this.state.author)
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("textarea", {className: "form-control non-resize-text-area", rows: "10", value: this.state.story})
+                    )
+                )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
                     React.createElement("input", {name: "passphrase", className: "form-control", type: "password", onChange: this.handlePassphrase, placeholder: "Пароль для редактирования(на случай утери cookies)", value: this.state.passphrase})
