@@ -64,7 +64,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           author:'',
           story: '',
           passphrase: '',
-          mode: 'create'
+          editMode: false,
+          linkText: '',
       };
     },
 
@@ -88,12 +89,17 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           dataType: 'json',
           cache: false,
           success: function(data) {
+              var link_text = '';
+              if(data.data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + data.data.linkText;
+              }
               this.setState({
                   title: data.data.title,
                   author: data.data.author,
                   story: data.data.story,
                   passphrase: '',
-                  editMode: data.data.editMode
+                  editMode: data.data.editMode,
+                  linkText: link_text
               })
           }.bind(this),
           error: function(xhr, status, err) {
@@ -116,7 +122,11 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           data: JSON.stringify(this.state),
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
-            console.log(data)
+              var link_text = '';
+              if(data.data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + data.data.linkText;
+              }
+              this.setState({linkText: link_text});
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -148,8 +158,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
 
 
     render: function () {
-        var editMode = this.state.mode == 'edit';
-        var createMode = this.state.mode == 'create';
+        var editMode = this.state.editMode;
+        var linkText = this.state.linkText;
         return(
             React.createElement("div", null, 
                 editMode?(
@@ -178,8 +188,14 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 React.createElement("div", {className: "form-group"}, 
                     React.createElement("input", {name: "passphrase", className: "form-control", type: "password", onChange: this.handlePassphrase, placeholder: "Пароль для редактирования(на случай утери cookies)", value: this.state.passphrase})
                 ), 
+                linkText.length > 0 ?(
                 React.createElement("div", {className: "form-group"}, 
-                  React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, onClick: this.submitPost, type: "submit"}, "Опубликовать")
+                    React.createElement("h3", null, React.createElement("a", {href: linkText}, linkText))
+                )
+                ):(
+                React.createElement("div", {className: "form-group"}, 
+                    React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, onClick: this.submitPost, type: "submit"}, "Опубликовать")
+                )
                 )
             )
         )

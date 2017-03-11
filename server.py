@@ -22,6 +22,7 @@ def empty_post():
         'story': '',
         'passphrase': '',
         'editMode': True,
+        'linkText': ''
     }
     return json.dumps({'status': 'ok', 'data': response_data})
 
@@ -31,7 +32,7 @@ def get_all_posts():
     posts = Post.query.all()
     posts_data = []
     for post in posts:
-        post_data = {'title': post.title, 'link': post.id}
+        post_data = {'title': post.title, 'link': post.post_id}
         posts_data.append(post_data)
     return json.dumps({'status': 'ok', 'data': posts_data})
 
@@ -43,7 +44,7 @@ def select_post(post_id):
 
 @app.route('/<post_id>/select_data', methods=['GET'])
 def select_post_data(post_id):
-    post = Post.query.filter_by(id=post_id).first()
+    post = Post.query.filter_by(post_id=post_id).first()
     editMode = False
     if request.cookies is not None and 'id' in request.cookies:
         editMode = post.cookie_id == request.cookies['id']
@@ -51,7 +52,8 @@ def select_post_data(post_id):
         'title': post.title,
         'author': post.author,
         'story': post.text,
-        'editMode': editMode
+        'editMode': editMode,
+        'linkText': post.post_id
     }
     return json.dumps({'status': 'ok', 'data': response_data})
 
@@ -68,9 +70,9 @@ def submit_post():
     post = Post(author, title, story, cookies_id, passphrase)
     db.session.add(post)
     db.session.commit()
-    post_id = post.id
-    print('post_id=%d' % post_id)
-    return json.dumps({'status': 'ok', 'post_id': post_id})
+    post_id = post.post_id
+    print('post_id=%s' % post_id)
+    return json.dumps({'status': 'ok', 'linkText': post_id})
 
 
 if __name__ == "__main__":
