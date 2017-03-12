@@ -22,14 +22,15 @@ def empty_post():
         'story': '',
         'passphrase': '',
         'editMode': True,
-        'linkText': ''
+        'linkText': '',
+        'searchable': True
     }
     return json.dumps({'status': 'ok', 'data': response_data})
 
 
 @app.route('/get_posts')
 def get_all_posts():
-    posts = Post.query.all()
+    posts = Post.query.filter_by(searchable=1).all()
     posts_data = []
     for post in posts:
         post_data = {'title': post.title, 'link': post.post_id}
@@ -53,7 +54,8 @@ def select_post_data(post_id):
         'author': post.author,
         'story': post.text,
         'editMode': editMode,
-        'linkText': post.post_id
+        'linkText': post.post_id,
+        'searchable': post.searchable
     }
     return json.dumps({'status': 'ok', 'data': response_data})
 
@@ -67,7 +69,8 @@ def submit_post():
     author = request.json['author']
     story = request.json['story']
     passphrase = request.json['passphrase']
-    post = Post(author, title, story, cookies_id, passphrase)
+    searchable = request.json['searchable']
+    post = Post(author, title, story, cookies_id, searchable, passphrase)
     db.session.add(post)
     db.session.commit()
     post_id = post.post_id

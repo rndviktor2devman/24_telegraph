@@ -14,10 +14,10 @@ class Post(db.Model):
     update_date = db.Column(db.DateTime)
     passphrase = db.Column(db.String(80))
     cookie_id = db.Column(db.String(10))
-    searchable = db.Column(db.Boolean)
+    searchable = db.Column(db.Boolean, unique=False, default=False)
     post_id = db.Column(db.String(10))
 
-    def __init__(self, author, title, text, cookie_id, passphrase=None, date=None):
+    def __init__(self, author, title, text, cookie_id, searchable, passphrase=None, date=None):
         self.author = author
         self.title = title
         self.text = text
@@ -29,6 +29,7 @@ class Post(db.Model):
         self.passphrase = passphrase
         self.cookie_id = cookie_id
         self.post_id = id_generator(10)
+        self.searchable = searchable
 
 
 def id_generator(size=20, chars=string.ascii_uppercase + string.digits):

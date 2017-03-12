@@ -66,6 +66,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           passphrase: '',
           editMode: false,
           linkText: '',
+          searchable: true
       };
     },
 
@@ -99,7 +100,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                   story: data.data.story,
                   passphrase: '',
                   editMode: data.data.editMode,
-                  linkText: link_text
+                  linkText: link_text,
+                  searchable: data.data.searchable
               })
           }.bind(this),
           error: function(xhr, status, err) {
@@ -156,6 +158,13 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         }
     },
 
+    handleSearchable: function (event) {
+        const target = event.target;
+        const value =  target.checked;
+        this.setState({
+          searchable: value
+        });
+    },
 
     render: function () {
         var editMode = this.state.editMode;
@@ -177,8 +186,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 ):(
                 React.createElement("div", null, 
                     React.createElement("div", {className: "form-group"}, 
-                        React.createElement("h1", null, this.state.title), 
-                        React.createElement("h3", null, this.state.author)
+                        React.createElement("h1", null, "Название: ", this.state.title), 
+                        React.createElement("h3", null, "Автор: ", this.state.author)
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("textarea", {className: "form-control non-resize-text-area", rows: "10", value: this.state.story})
@@ -193,9 +202,23 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                     React.createElement("h3", null, React.createElement("a", {href: linkText}, linkText))
                 )
                 ):(
-                React.createElement("div", {className: "form-group"}, 
-                    React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, onClick: this.submitPost, type: "submit"}, "Опубликовать")
+                React.createElement("div", null, 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", checked: this.state.searchable, onChange: this.handleSearchable}))
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, onClick: this.submitPost, type: "submit"}, "Опубликовать")
+                    )
                 )
+                ), 
+                editMode && linkText.length > 0 ?(
+                React.createElement("div", null, 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", checked: this.state.searchable, onChange: this.handleSearchable}))
+                    )
+                )
+                ):(
+                React.createElement("div", null)
                 )
             )
         )

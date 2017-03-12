@@ -65,6 +65,7 @@ var PostsEditor = React.createClass({
           passphrase: '',
           editMode: false,
           linkText: '',
+          searchable: true
       };
     },
 
@@ -98,7 +99,8 @@ var PostsEditor = React.createClass({
                   story: data.data.story,
                   passphrase: '',
                   editMode: data.data.editMode,
-                  linkText: link_text
+                  linkText: link_text,
+                  searchable: data.data.searchable
               })
           }.bind(this),
           error: function(xhr, status, err) {
@@ -155,6 +157,13 @@ var PostsEditor = React.createClass({
         }
     },
 
+    handleSearchable: function (event) {
+        const target = event.target;
+        const value =  target.checked;
+        this.setState({
+          searchable: value
+        });
+    },
 
     render: function () {
         var editMode = this.state.editMode;
@@ -176,8 +185,8 @@ var PostsEditor = React.createClass({
                 ):(
                 <div>
                     <div className="form-group">
-                        <h1>{this.state.title}</h1>
-                        <h3>{this.state.author}</h3>
+                        <h1>Название: {this.state.title}</h1>
+                        <h3>Автор: {this.state.author}</h3>
                     </div>
                     <div className="form-group">
                         <textarea className="form-control non-resize-text-area" rows="10" value={this.state.story}/>
@@ -192,9 +201,23 @@ var PostsEditor = React.createClass({
                     <h3><a href={linkText}>{linkText}</a></h3>
                 </div>
                 ):(
-                <div className="form-group">
-                    <button className="btn btn-primary" disabled={!this.state.editMode} onClick={this.submitPost} type="submit">Опубликовать</button>
+                <div>
+                    <div className="form-group">
+                        <label className="form-control">Доступен для поиска: <input type="checkbox"  checked={this.state.searchable} onChange={this.handleSearchable} /></label>
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary" disabled={!this.state.editMode} onClick={this.submitPost} type="submit">Опубликовать</button>
+                    </div>
                 </div>
+                )}
+                {editMode && linkText.length > 0 ?(
+                <div>
+                    <div className="form-group">
+                        <label className="form-control">Доступен для поиска: <input type="checkbox"  checked={this.state.searchable} onChange={this.handleSearchable}/></label>
+                    </div>
+                </div>
+                ):(
+                <div></div>
                 )}
             </div>
         )
