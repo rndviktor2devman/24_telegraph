@@ -124,11 +124,12 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           data: JSON.stringify(this.state),
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
+              var json = $.parseJSON(data);
               var link_text = '';
-              if(data.data.linkText.length > 0){
-                  link_text = window.location.origin + '/' + data.data.linkText;
+              if(json.data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + json.data.linkText;
               }
-              this.setState({linkText: link_text});
+              this.setState({linkText: link_text, editMode: true});
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -215,6 +216,14 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 React.createElement("div", null, 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", checked: this.state.searchable, onChange: this.handleSearchable}))
+                    ), 
+                    React.createElement("div", {className: "form-group"}, 
+                        React.createElement("div", {className: "col-xs-2"}, 
+                            React.createElement("button", {className: "btn btn-primary"}, "Обновить")
+                        ), 
+                        React.createElement("div", {className: "col-xs-2"}, 
+                            React.createElement("button", {className: "btn btn-primary"}, "Удалить")
+                        )
                     )
                 )
                 ):(

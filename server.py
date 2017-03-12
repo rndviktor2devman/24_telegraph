@@ -75,7 +75,10 @@ def submit_post():
     db.session.commit()
     post_id = post.post_id
     print('post_id=%s' % post_id)
-    return json.dumps({'status': 'ok', 'linkText': post_id})
+    response_data = {
+        'linkText': post_id
+    }
+    return json.dumps({'status': 'ok', 'data': response_data})
 
 
 if __name__ == "__main__":
