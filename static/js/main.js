@@ -139,6 +139,33 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         });
     },
 
+    updatePost: function () {
+        var sendUrl = document.URL;
+        if(sendUrl.substr(sendUrl.length - 1) !== '/')
+        {
+            sendUrl += '/'
+        }
+        sendUrl = sendUrl + 'update';
+        document.cookie = "id=" + Date.now().toString(32);
+        $.ajax({
+          url: sendUrl,
+          type: 'POST',
+          data: JSON.stringify(this.state),
+          contentType: 'application/json;charset=UTF-8',
+          success: function(data) {
+              var json = $.parseJSON(data);
+              var link_text = '';
+              if(json.data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + json.data.linkText;
+              }
+              this.setState({linkText: link_text, editMode: true, pristine: true});
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+
     handlePassphrase: function(event){
         this.setState({passphrase:event.target.value, pristine: false})
     },
@@ -221,7 +248,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", {className: "col-xs-2"}, 
-                            React.createElement("button", {className: "btn btn-primary", disabled: this.state.pristine}, "Обновить")
+                            React.createElement("button", {className: "btn btn-primary", disabled: this.state.pristine, onClick: this.updatePost}, "Обновить")
                         ), 
                         React.createElement("div", {className: "col-xs-2"}, 
                             React.createElement("button", {className: "btn remove-button"}, "Удалить")

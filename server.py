@@ -81,5 +81,24 @@ def submit_post():
     return json.dumps({'status': 'ok', 'data': response_data})
 
 
+@app.route('/<post_id>/update', methods=['POST'])
+def edit_post(post_id):
+    old_post = Post.query.filter_by(post_id=post_id).first()
+    old_searchable = old_post.searchable
+    old_post.cookies_id = request.cookies['id']
+    old_post.title = request.json['title']
+    old_post.author = request.json['author']
+    old_post.story = request.json['story']
+    old_post.passphrase = request.json['passphrase']
+    old_post.searchable = request.json['searchable']
+    db.session.commit()
+    response_data = {
+        'linkText': post_id
+    }
+    if old_searchable or old_searchable != request.json['searchable']:
+        print('should be refresh called')
+    return json.dumps({'status': 'ok', 'data': response_data})
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
