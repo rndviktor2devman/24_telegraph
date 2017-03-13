@@ -78,6 +78,8 @@ def submit_post():
     response_data = {
         'linkText': post_id
     }
+    if searchable:
+        print('should be refresh called')
     return json.dumps({'status': 'ok', 'data': response_data})
 
 
