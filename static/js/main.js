@@ -66,7 +66,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           passphrase: '',
           editMode: false,
           linkText: '',
-          searchable: true
+          searchable: true,
+          pristine: true
       };
     },
 
@@ -101,7 +102,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                   passphrase: '',
                   editMode: data.data.editMode,
                   linkText: link_text,
-                  searchable: data.data.searchable
+                  searchable: data.data.searchable,
+                  pristine: true
               })
           }.bind(this),
           error: function(xhr, status, err) {
@@ -129,7 +131,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
               if(json.data.linkText.length > 0){
                   link_text = window.location.origin + '/' + json.data.linkText;
               }
-              this.setState({linkText: link_text, editMode: true});
+              this.setState({linkText: link_text, editMode: true, pristine: true});
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -138,24 +140,24 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
     },
 
     handlePassphrase: function(event){
-        this.setState({passphrase:event.target.value})
+        this.setState({passphrase:event.target.value, pristine: false})
     },
 
     handleTitle: function(event){
         if(this.state.editMode){
-            this.setState({title:event.target.value})
+            this.setState({title:event.target.value, pristine: false})
         }
     },
 
     handleAuthor: function (event) {
         if(this.state.editMode){
-            this.setState({author:event.target.value})
+            this.setState({author:event.target.value, pristine: false})
         }
     },
 
     handleStory: function (event) {
         if(this.state.editMode){
-            this.setState({story:event.target.value})
+            this.setState({story:event.target.value, pristine: false})
         }
     },
 
@@ -219,10 +221,10 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", {className: "col-xs-2"}, 
-                            React.createElement("button", {className: "btn btn-primary"}, "Обновить")
+                            React.createElement("button", {className: "btn btn-primary", disabled: this.state.pristine}, "Обновить")
                         ), 
                         React.createElement("div", {className: "col-xs-2"}, 
-                            React.createElement("button", {className: "btn btn-primary"}, "Удалить")
+                            React.createElement("button", {className: "btn remove-button"}, "Удалить")
                         )
                     )
                 )

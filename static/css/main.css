@@ -116,3 +116,7 @@ ul {
 .form-control{
     border: 0px none;
 }
+
+.remove-button{
+    color: darkred;
+}
