@@ -140,6 +140,33 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         });
     },
 
+    deletePost: function () {
+        var sendUrl = document.URL;
+        if(sendUrl.substr(sendUrl.length - 1) !== '/')
+        {
+            sendUrl += '/'
+        }
+        sendUrl += 'delete';
+        $.ajax({
+          url: sendUrl,
+          type: 'POST',
+          data: JSON.stringify(this.state),
+          contentType: 'application/json;charset=UTF-8',
+          success: function(data) {
+              var json = $.parseJSON(data);
+              if(json.status === 'ok'){
+                  window.location.href = '/'
+              }
+              else{
+                  window.location.href = '/404_page'
+              }
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+
     updatePost: function () {
         var sendUrl = document.URL;
         if(sendUrl.substr(sendUrl.length - 1) !== '/')
@@ -147,7 +174,9 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
             sendUrl += '/'
         }
         sendUrl = sendUrl + 'update';
-        document.cookie = "id=" + Date.now().toString(32);
+        if(document.cookie.indexOf('id=') == -1){
+            document.cookie = "id=" + Date.now().toString(32);
+        }
         $.ajax({
           url: sendUrl,
           type: 'POST',
@@ -159,7 +188,12 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
               if(json.data.linkText.length > 0){
                   link_text = window.location.origin + '/' + json.data.linkText;
               }
-              this.setState({linkText: link_text, editMode: true, pristine: true});
+              if(json.status === 'ok'){
+                  this.setState({linkText: link_text, editMode: true, pristine: true});
+              }
+              else{
+                  window.location.href = '/404_page'
+              }
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -252,7 +286,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                             React.createElement("button", {className: "btn btn-primary", disabled: this.state.pristine, onClick: this.updatePost}, "Обновить")
                         ), 
                         React.createElement("div", {className: "col-xs-2"}, 
-                            React.createElement("button", {className: "btn remove-button"}, "Удалить")
+                            React.createElement("button", {className: "btn remove-button", onClick: this.deletePost}, "Удалить")
                         )
                     )
                 )

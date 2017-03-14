@@ -22,6 +22,11 @@ def form(post_id=None):
             return render_template('404.html'), 404
 
 
+@app.route('/404_page')
+def error():
+    return render_template('404.html'), 404
+
+
 @app.route('/empty_post')
 def empty_post():
     response_data = {
@@ -86,22 +91,53 @@ def submit_post():
     return json.dumps({'status': 'ok', 'data': response_data})
 
 
-@app.route('/<post_id>/update', methods=['POST'])
-def edit_post(post_id):
+@app.route('/<post_id>/delete', methods=['POST'])
+def delete_post(post_id):
     response_data = {
         'linkText': post_id
     }
     old_post = Post.query.filter_by(post_id=post_id).first()
     if old_post is not None:
         old_searchable = old_post.searchable
-        old_post.cookies_id = request.cookies['id']
-        old_post.title = request.json['title']
-        old_post.author = request.json['author']
-        old_post.story = request.json['story']
-        old_post.passphrase = request.json['passphrase']
-        old_post.searchable = request.json['searchable']
-        db.session.commit()
+        cookie_id = None
+        if request.cookies is not None and 'id' in request.cookies:
+            cookie_id = request.cookies['id']
+        passphrase = request.json['passphrase']
+        if passphrase == old_post.passphrase or (cookie_id is not None
+                                                 and cookie_id == old_post.cookie_id):
+            Post.query.filter_by(post_id=post_id).delete()
+            db.session.commit()
+            if old_searchable:
+                print('should be refresh called')
+            return json.dumps({'status': 'ok', 'data': response_data})
+        else:
+            return json.dumps({'status': 'forbid', 'data': response_data})
 
+
+@app.route('/<post_id>/update', methods=['POST'])
+def edit_post(post_id):
+    response_data = {
+        'linkText': post_id
+    }
+    old_post = Post.query.filter_by(post_id=post_id).first()
+    old_searchable = False
+    if old_post is not None:
+        old_searchable = old_post.searchable
+        cookie_id = None
+        if request.cookies is not None and 'id' in request.cookies:
+            cookie_id = request.cookies['id']
+        passphrase = request.json['passphrase']
+        if passphrase == old_post.passphrase or (cookie_id is not None
+                                                 and cookie_id == old_post.cookie_id):
+            old_post.cookies_id = request.cookies['id']
+            old_post.title = request.json['title']
+            old_post.author = request.json['author']
+            old_post.story = request.json['story']
+            old_post.passphrase = request.json['passphrase']
+            old_post.searchable = request.json['searchable']
+            db.session.commit()
+        else:
+            return json.dumps({'status': 'forbid', 'data': response_data})
     if old_searchable or old_searchable != request.json['searchable']:
         print('should be refresh called')
     return json.dumps({'status': 'ok', 'data': response_data})
