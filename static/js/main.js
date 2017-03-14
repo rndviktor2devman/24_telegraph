@@ -230,7 +230,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
             console.error(this.props.url, status, err.toString());
           }.bind(this)
         });
-        this.setState({passphrase:event.target.value, pristine: false});
+        this.setState({passphrase:event.target.value});
     },
 
     handleTitle: function(event){
