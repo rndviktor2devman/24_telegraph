@@ -10,7 +10,8 @@ socketio = SocketIO(app)
 
 
 @app.route('/')
-def form():
+@app.route('/<post_id>', methods=['GET'])
+def form(post_id):
     return render_template('form.html')
 
 
@@ -36,11 +37,6 @@ def get_all_posts():
         post_data = {'title': post.title, 'link': post.post_id}
         posts_data.append(post_data)
     return json.dumps({'status': 'ok', 'data': posts_data})
-
-
-@app.route('/<post_id>', methods=['GET'])
-def select_post(post_id):
-    return render_template('form.html')
 
 
 @app.route('/<post_id>/select_data', methods=['GET'])
