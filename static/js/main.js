@@ -117,6 +117,9 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
     },
 
     submitPost: function () {
+        if(document.cookie.indexOf('id=') == -1){
+            document.cookie = "id=" + Date.now().toString(32);
+        }
         var sendUrl = this.props.url;
         if(!sendUrl)
         {
