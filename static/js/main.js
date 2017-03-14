@@ -72,6 +72,10 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
     },
 
     componentDidMount: function () {
+        if(document.cookie.indexOf('id=') == -1){
+            document.cookie = "id=" + Date.now().toString(32);
+        }
+
         var sendUrl = document.URL;
         if(window.location.pathname == '/')
         {
@@ -119,7 +123,6 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
             sendUrl = document.URL
         }
         sendUrl = sendUrl + 'post';
-        document.cookie = "id=" + Date.now().toString(32);
         $.ajax({
           url: sendUrl,
           type: 'POST',
