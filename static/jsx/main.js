@@ -200,8 +200,36 @@ var PostsEditor = React.createClass({
         });
     },
 
+    newPost: function () {
+        window.location.href = '/'
+    },
+
     handlePassphrase: function(event){
-        this.setState({passphrase:event.target.value, pristine: false})
+        var passphrase = {'passphrase': event.target.value};
+        var sendUrl = document.URL;
+        if(sendUrl.substr(sendUrl.length - 1) !== '/')
+        {
+            sendUrl += '/'
+        }
+        sendUrl += 'check_passphrase';
+        $.ajax({
+          url: sendUrl,
+          type: 'POST',
+          data: JSON.stringify(passphrase),
+          contentType: 'application/json;charset=UTF-8',
+          success: function(data) {
+              var json = $.parseJSON(data);
+              if(json.status === 'ok'){
+                  this.setState({editMode: true, pristine: true});
+              }else{
+                  this.setState({editMode: false, pristine: true});
+              }
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+        this.setState({passphrase:event.target.value, pristine: false});
     },
 
     handleTitle: function(event){
@@ -283,6 +311,9 @@ var PostsEditor = React.createClass({
                     <div className="form-group">
                         <div className="col-xs-2">
                             <button className="btn btn-primary" disabled={this.state.pristine} onClick={this.updatePost}>Обновить</button>
+                        </div>
+                        <div className="col-xs-2">
+                            <button className="btn btn-primary" onClick={this.newPost}>Новый</button>
                         </div>
                         <div className="col-xs-2">
                             <button className="btn remove-button" onClick={this.deletePost}>Удалить</button>

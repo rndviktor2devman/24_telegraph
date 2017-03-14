@@ -68,6 +68,16 @@ def select_post_data(post_id):
     return json.dumps({'status': 'ok', 'data': response_data})
 
 
+@app.route('/<post_id>/check_passphrase', methods=['POST'])
+def check_passphrase(post_id):
+    passphrase = request.json['passphrase']
+    post = Post.query.filter_by(post_id=post_id).first()
+    if post is not None and post.passphrase == passphrase:
+        return json.dumps({'status': 'ok'})
+    else:
+        return json.dumps({'status': 'forbid'})
+
+
 @app.route('/post', methods=['POST'])
 def submit_post():
     print('empty post creation')
