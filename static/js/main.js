@@ -128,11 +128,11 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
               var json = $.parseJSON(data);
-              var link_text = '';
+              var link_text = '/';
               if(json.data.linkText.length > 0){
                   link_text = window.location.origin + '/' + json.data.linkText;
               }
-              this.setState({linkText: link_text, editMode: true, pristine: true});
+              window.location.href = link_text
           }.bind(this),
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
