@@ -11,8 +11,20 @@ socketio = SocketIO(app)
 
 @app.route('/')
 @app.route('/<post_id>', methods=['GET'])
-def form(post_id):
-    return render_template('form.html')
+def form(post_id=None):
+    if post_id is None:
+        return render_template('form.html')
+    else:
+        post = Post.query.filter_by(post_id=post_id).first()
+        if post is not None:
+            return render_template('form.html')
+        else:
+            return render_template('404.html'), 404
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return 'This page does not exist', 404
 
 
 @app.route('/empty_post')
@@ -81,18 +93,20 @@ def submit_post():
 
 @app.route('/<post_id>/update', methods=['POST'])
 def edit_post(post_id):
-    old_post = Post.query.filter_by(post_id=post_id).first()
-    old_searchable = old_post.searchable
-    old_post.cookies_id = request.cookies['id']
-    old_post.title = request.json['title']
-    old_post.author = request.json['author']
-    old_post.story = request.json['story']
-    old_post.passphrase = request.json['passphrase']
-    old_post.searchable = request.json['searchable']
-    db.session.commit()
     response_data = {
         'linkText': post_id
     }
+    old_post = Post.query.filter_by(post_id=post_id).first()
+    if old_post is not None:
+        old_searchable = old_post.searchable
+        old_post.cookies_id = request.cookies['id']
+        old_post.title = request.json['title']
+        old_post.author = request.json['author']
+        old_post.story = request.json['story']
+        old_post.passphrase = request.json['passphrase']
+        old_post.searchable = request.json['searchable']
+        db.session.commit()
+
     if old_searchable or old_searchable != request.json['searchable']:
         print('should be refresh called')
     return json.dumps({'status': 'ok', 'data': response_data})
