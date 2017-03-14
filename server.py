@@ -22,11 +22,6 @@ def form(post_id=None):
             return render_template('404.html'), 404
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    return 'This page does not exist', 404
-
-
 @app.route('/empty_post')
 def empty_post():
     response_data = {
