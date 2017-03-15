@@ -96,8 +96,6 @@ def submit_post():
     response_data = {
         'linkText': post_id
     }
-    if searchable:
-        print('should be refresh called')
     return json.dumps({'status': 'ok', 'data': response_data})
 
 
@@ -108,7 +106,6 @@ def delete_post(post_id):
     }
     old_post = Post.query.filter_by(post_id=post_id).first()
     if old_post is not None:
-        old_searchable = old_post.searchable
         cookie_id = None
         if request.cookies is not None and 'id' in request.cookies:
             cookie_id = request.cookies['id']
@@ -117,8 +114,6 @@ def delete_post(post_id):
                                                  and cookie_id == old_post.cookie_id):
             Post.query.filter_by(post_id=post_id).delete()
             db.session.commit()
-            if old_searchable:
-                print('should be refresh called')
             return json.dumps({'status': 'ok', 'data': response_data})
         else:
             return json.dumps({'status': 'forbid', 'data': response_data})
@@ -130,9 +125,7 @@ def edit_post(post_id):
         'linkText': post_id
     }
     old_post = Post.query.filter_by(post_id=post_id).first()
-    old_searchable = False
     if old_post is not None:
-        old_searchable = old_post.searchable
         cookie_id = None
         if request.cookies is not None and 'id' in request.cookies:
             cookie_id = request.cookies['id']
@@ -148,8 +141,6 @@ def edit_post(post_id):
             db.session.commit()
         else:
             return json.dumps({'status': 'forbid', 'data': response_data})
-    if old_searchable or old_searchable != request.json['searchable']:
-        print('should be refresh called')
     return json.dumps({'status': 'ok', 'data': response_data})
 
 

@@ -1,4 +1,3 @@
-//var socket = io.connect('http://' + document.domain + ':' + location.port);
 var PostsList = React.createClass({
     // sets initial state
     getInitialState: function(){
