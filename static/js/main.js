@@ -9,6 +9,10 @@ var PostsList = React.createClass({displayName: "PostsList",
     },
 
     componentDidMount: function () {
+        var cached_search = localStorage.getItem('search_string');
+        if(cached_search){
+            this.setState({searchString: cached_search});
+        }
         sendUrl = '/get_posts';
         $.ajax({
           url: sendUrl,
@@ -28,7 +32,9 @@ var PostsList = React.createClass({displayName: "PostsList",
     },
 
     handleChange: function(event){
-        this.setState({searchString:event.target.value})
+        var search_string = event.target.value;
+        localStorage.setItem('search_string', search_string);
+        this.setState({searchString: search_string});
     },
 
     render: function(){
