@@ -8,7 +8,7 @@ The code is written for educational purposes. Training course for web-developers
 
 The running online site could be verified [here](https://whispering-depths-75337.herokuapp.com/)
 
-##Requirements:
+## Requirements:
 Before start project we need to setup environment:
 ```
 pip3 install -r requirements.txt
@@ -17,7 +17,7 @@ and create database:
 ```
 python3 db_create.py
 ```
-##Usage:
+## Usage:
 Start site:
 ```
 python3 server.py
