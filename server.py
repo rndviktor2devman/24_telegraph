@@ -32,7 +32,7 @@ def empty_post():
         'author': '',
         'story': '',
         'passphrase': '',
-        'editMode': True,
+        'edit_mode': True,
         'linkText': '',
         'searchable': True
     }
@@ -52,14 +52,14 @@ def get_all_posts():
 @app.route('/<post_id>/select_data', methods=['GET'])
 def select_post_data(post_id):
     post = Post.query.filter_by(post_id=post_id).first()
-    editMode = False
+    edit_mode = False
     if request.cookies is not None and 'id' in request.cookies:
-        editMode = post.cookie_id == request.cookies['id']
+        edit_mode = post.cookie_id == request.cookies['id']
     response_data = {
         'title': post.title,
         'author': post.author,
         'story': post.text,
-        'editMode': editMode,
+        'edit_mode': edit_mode,
         'linkText': post.post_id,
         'searchable': post.searchable
     }

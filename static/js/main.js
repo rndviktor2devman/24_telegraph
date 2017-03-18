@@ -109,7 +109,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                   author: data.data.author,
                   story: data.data.story,
                   passphrase: '',
-                  editMode: data.data.editMode,
+                  editMode: data.data.edit_mode,
                   linkText: link_text,
                   searchable: data.data.searchable,
                   pristine: true
