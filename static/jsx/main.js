@@ -258,9 +258,7 @@ var PostsEditor = React.createClass({
     handleSearchable: function (event) {
         const target = event.target;
         const value =  target.checked;
-        this.setState({
-          searchable: value
-        });
+        this.setState({ searchable: value, pristine: false});
     },
 
     render: function () {
