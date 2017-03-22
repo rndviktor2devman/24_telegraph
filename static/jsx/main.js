@@ -193,7 +193,7 @@ var PostsEditor = React.createClass({
                   link_text = window.location.origin + '/' + json.data.linkText;
               }
               if(json.status === 'ok'){
-                  this.setState({linkText: link_text, editMode: true, pristine: true});
+                  window.location.href = link_text;
               }
               else{
                   window.location.href = '/404_page'
