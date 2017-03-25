@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from posts import Post, db
 import json
 
@@ -25,6 +25,26 @@ def error():
     return render_template('404.html'), 404
 
 
+def not_found():
+    message = {
+        'status': 404,
+        'message': 'Not Found:' + request.url
+    }
+    return app.response_class(
+        response=json.dumps(message),
+        status=404,
+        mimetype='application/json'
+    )
+
+
+def correct_response(data=None):
+    return app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json'
+    )
+
+
 @app.route('/empty_post')
 def empty_post():
     response_data = {
@@ -36,7 +56,7 @@ def empty_post():
         'linkText': '',
         'searchable': True
     }
-    return json.dumps({'status': 'ok', 'data': response_data})
+    return correct_response(response_data)
 
 
 @app.route('/get_posts')
@@ -46,7 +66,7 @@ def get_all_posts():
     for post in posts:
         post_data = {'title': post.title, 'link': post.post_id}
         posts_data.append(post_data)
-    return json.dumps({'status': 'ok', 'data': posts_data})
+    return correct_response(posts_data)
 
 
 @app.route('/<post_id>/select_data', methods=['GET'])
@@ -63,7 +83,7 @@ def select_post_data(post_id):
         'linkText': post.post_id,
         'searchable': post.searchable
     }
-    return json.dumps({'status': 'ok', 'data': response_data})
+    return correct_response(response_data)
 
 
 @app.route('/<post_id>/check_passphrase', methods=['POST'])
@@ -71,9 +91,9 @@ def check_passphrase(post_id):
     passphrase = request.json['passphrase']
     post = Post.query.filter_by(post_id=post_id).first()
     if post is not None and post.passphrase == passphrase:
-        return json.dumps({'status': 'ok'})
+        return correct_response()
     else:
-        return json.dumps({'status': 'forbid'})
+        return not_found()
 
 
 @app.route('/post', methods=['POST'])
@@ -94,7 +114,7 @@ def submit_post():
     response_data = {
         'linkText': post_id
     }
-    return json.dumps({'status': 'ok', 'data': response_data})
+    return correct_response(response_data)
 
 
 @app.route('/<post_id>/delete', methods=['POST'])
@@ -112,9 +132,9 @@ def delete_post(post_id):
                                                  and cookie_id == old_post.cookie_id):
             Post.query.filter_by(post_id=post_id).delete()
             db.session.commit()
-            return json.dumps({'status': 'ok', 'data': response_data})
-        else:
-            return json.dumps({'status': 'forbid', 'data': response_data})
+            return correct_response(response_data)
+
+    return not_found()
 
 
 @app.route('/<post_id>/update', methods=['POST'])
@@ -133,13 +153,12 @@ def edit_post(post_id):
             old_post.cookies_id = request.cookies['id']
             old_post.title = request.json['title']
             old_post.author = request.json['author']
-            old_post.story = request.json['story']
-            old_post.passphrase = request.json['passphrase']
+            old_post.text = request.json['story']
             old_post.searchable = request.json['searchable']
             db.session.commit()
-        else:
-            return json.dumps({'status': 'forbid', 'data': response_data})
-    return json.dumps({'status': 'ok', 'data': response_data})
+            return correct_response(response_data)
+
+    return not_found()
 
 
 if __name__ == "__main__":

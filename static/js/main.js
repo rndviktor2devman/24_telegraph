@@ -19,7 +19,7 @@ var PostsList = React.createClass({displayName: "PostsList",
           dataType: 'json',
           cache: false,
           success: function(data) {
-              var search_data = data.data;
+              var search_data = data;
               search_data.forEach(function (item) {
                   item.link = window.location.origin + '/' + item.link;
               });
@@ -101,17 +101,17 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           cache: false,
           success: function(data) {
               var link_text = '';
-              if(data.data.linkText.length > 0){
-                  link_text = window.location.origin + '/' + data.data.linkText;
+              if(data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + data.linkText;
               }
               this.setState({
-                  title: data.data.title,
-                  author: data.data.author,
-                  story: data.data.story,
+                  title: data.title,
+                  author: data.author,
+                  story: data.story,
                   passphrase: '',
-                  editMode: data.data.edit_mode,
+                  editMode: data.edit_mode,
                   linkText: link_text,
-                  searchable: data.data.searchable,
+                  searchable: data.searchable,
                   pristine: true
               })
           }.bind(this),
@@ -132,10 +132,9 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           data: JSON.stringify(this.state),
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
-              var json = $.parseJSON(data);
               var link_text = '/';
-              if(json.data.linkText.length > 0){
-                  link_text = window.location.origin + '/' + json.data.linkText;
+              if(data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + data.linkText;
               }
               window.location.href = link_text
           }.bind(this),
@@ -158,16 +157,12 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           data: JSON.stringify(this.state),
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
-              var json = $.parseJSON(data);
-              if(json.status === 'ok'){
-                  window.location.href = '/'
-              }
-              else{
-                  window.location.href = '/404_page'
-              }
+              window.location.href = '/';
           }.bind(this),
           error: function(xhr, status, err) {
-            console.error(this.props.url, status, err.toString());
+              if(xhr.status == 404){
+                  window.location.href = '/404_page'
+              }
           }.bind(this)
         });
     },
@@ -188,20 +183,16 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           data: JSON.stringify(this.state),
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
-              var json = $.parseJSON(data);
               var link_text = '';
-              if(json.data.linkText.length > 0){
-                  link_text = window.location.origin + '/' + json.data.linkText;
+              if(data.linkText.length > 0){
+                  link_text = window.location.origin + '/' + data.linkText;
               }
-              if(json.status === 'ok'){
-                  window.location.href = link_text;
-              }
-              else{
-                  window.location.href = '/404_page'
-              }
+              window.location.href = link_text;
           }.bind(this),
           error: function(xhr, status, err) {
-            console.error(this.props.url, status, err.toString());
+              if(xhr.status == 404){
+                  window.location.href = '/404_page'
+              }
           }.bind(this)
         });
     },
@@ -224,17 +215,15 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           data: JSON.stringify(passphrase),
           contentType: 'application/json;charset=UTF-8',
           success: function(data) {
-              var json = $.parseJSON(data);
-              if(json.status === 'ok'){
-                  this.setState({editMode: true, pristine: true});
-              }else{
-                  this.setState({editMode: false, pristine: true});
-              }
+              this.setState({editMode: true, pristine: true});
           }.bind(this),
           error: function(xhr, status, err) {
-            console.error(this.props.url, status, err.toString());
+              if(xhr.status == 404){
+                  this.setState({editMode: false, pristine: true});
+              }
           }.bind(this)
         });
+
         this.setState({passphrase:event.target.value});
     },
 
