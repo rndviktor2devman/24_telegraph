@@ -98,8 +98,6 @@ def check_passphrase(post_id):
 
 @app.route('/post', methods=['POST'])
 def submit_post():
-    print('empty post creation')
-    print(request.json)
     cookies_id = request.cookies['id']
     title = request.json['title']
     author = request.json['author']
@@ -110,7 +108,6 @@ def submit_post():
     db.session.add(post)
     db.session.commit()
     post_id = post.post_id
-    print('post_id=%s' % post_id)
     response_data = {
         'linkText': post_id
     }
