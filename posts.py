@@ -17,13 +17,14 @@ class Post(db.Model):
     searchable = db.Column(db.Boolean, unique=False, default=False)
     post_id = db.Column(db.String(10))
 
-    def __init__(self, author, title, text, cookie_id, searchable, passphrase=None, date=None):
+    def __init__(self, author, title, text, cookie_id, searchable,
+                 passphrase=None, submit_date=None):
         self.author = author
         self.title = title
         self.text = text
-        if date is None:
-            date = datetime.utcnow()
-        self.update_date = date
+        if submit_date is None:
+            submit_date = datetime.utcnow()
+        self.update_date = submit_date
         if passphrase is None or not passphrase.strip():
             passphrase = id_generator()
         self.passphrase = passphrase
