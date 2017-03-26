@@ -11,20 +11,20 @@ class Post(db.Model):
     author = db.Column(db.String(120))
     title = db.Column(db.String(120))
     text = db.Column(db.Text)
-    update_date = db.Column(db.DateTime)
+    update_time = db.Column(db.DateTime)
     passphrase = db.Column(db.String(80))
     cookie_id = db.Column(db.String(10))
     searchable = db.Column(db.Boolean, unique=False, default=False)
     post_id = db.Column(db.String(10))
 
     def __init__(self, author, title, text, cookie_id, searchable,
-                 passphrase=None, submit_date=None):
+                 passphrase=None, submit_time=None):
         self.author = author
         self.title = title
         self.text = text
-        if submit_date is None:
-            submit_date = datetime.utcnow()
-        self.update_date = submit_date
+        if submit_time is None:
+            submit_time = datetime.utcnow()
+        self.update_time = submit_time
         if passphrase is None or not passphrase.strip():
             passphrase = id_generator()
         self.passphrase = passphrase
