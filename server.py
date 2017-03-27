@@ -25,6 +25,11 @@ def error():
     return render_template('404.html'), 404
 
 
+@app.route('/403_page')
+def error_forbidden():
+    return render_template('403.html'), 403
+
+
 def not_found():
     message = {
         'status': 404,
@@ -33,6 +38,18 @@ def not_found():
     return app.response_class(
         response=json.dumps(message),
         status=404,
+        mimetype='application/json'
+    )
+
+
+def forbidden_access():
+    message = {
+        'status': 403,
+        'message': 'Forbidden:' + request.url
+    }
+    return app.response_class(
+        response=json.dumps(message),
+        status=403,
         mimetype='application/json'
     )
 
@@ -93,7 +110,7 @@ def check_passphrase(post_id):
     if post is not None and post.passphrase == passphrase:
         return correct_response()
     else:
-        return not_found()
+        return forbidden_access()
 
 
 @app.route('/post', methods=['POST'])
@@ -120,7 +137,9 @@ def delete_post(post_id):
         'linkText': post_id
     }
     old_post = Post.query.filter_by(post_id=post_id).first()
-    if old_post is not None:
+    if old_post is None:
+        return not_found()
+    else:
         cookie_id = None
         if request.cookies is not None and 'id' in request.cookies:
             cookie_id = request.cookies['id']
@@ -130,8 +149,8 @@ def delete_post(post_id):
             Post.query.filter_by(post_id=post_id).delete()
             db.session.commit()
             return correct_response(response_data)
-
-    return not_found()
+        else:
+            return forbidden_access()
 
 
 @app.route('/<post_id>/update', methods=['POST'])
@@ -140,7 +159,9 @@ def edit_post(post_id):
         'linkText': post_id
     }
     old_post = Post.query.filter_by(post_id=post_id).first()
-    if old_post is not None:
+    if old_post is None:
+        return not_found()
+    else:
         cookie_id = None
         if request.cookies is not None and 'id' in request.cookies:
             cookie_id = request.cookies['id']
@@ -154,8 +175,8 @@ def edit_post(post_id):
             old_post.searchable = request.json['searchable']
             db.session.commit()
             return correct_response(response_data)
-
-    return not_found()
+        else:
+            return forbidden_access()
 
 
 if __name__ == "__main__":

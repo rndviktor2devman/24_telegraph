@@ -162,6 +162,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           error: function(xhr, status, err) {
               if(xhr.status == 404){
                   window.location.href = '/404_page'
+              } else if(xhr.status == 403){
+                  window.location.href = '/403_page'
               }
           }.bind(this)
         });
@@ -192,6 +194,8 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           error: function(xhr, status, err) {
               if(xhr.status == 404){
                   window.location.href = '/404_page'
+              }else if(xhr.status == 403){
+                  window.location.href = '/403_page'
               }
           }.bind(this)
         });
@@ -218,7 +222,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
               this.setState({editMode: true, pristine: true});
           }.bind(this),
           error: function(xhr, status, err) {
-              if(xhr.status == 404){
+              if(xhr.status == 403){
                   this.setState({editMode: false, pristine: true});
               }
           }.bind(this)
