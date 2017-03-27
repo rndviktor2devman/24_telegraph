@@ -140,12 +140,8 @@ def delete_post(post_id):
     if old_post is None:
         return not_found()
     else:
-        cookie_id = None
-        if request.cookies is not None and 'id' in request.cookies:
-            cookie_id = request.cookies['id']
-        passphrase = request.json['passphrase']
-        if passphrase == old_post.passphrase or (cookie_id is not None
-                                                 and cookie_id == old_post.cookie_id):
+        if request.json['passphrase'] == old_post.passphrase or \
+                (request.cookies.get('id') == old_post.cookie_id):
             Post.query.filter_by(post_id=post_id).delete()
             db.session.commit()
             return correct_response(response_data)
@@ -162,12 +158,8 @@ def edit_post(post_id):
     if old_post is None:
         return not_found()
     else:
-        cookie_id = None
-        if request.cookies is not None and 'id' in request.cookies:
-            cookie_id = request.cookies['id']
-        passphrase = request.json['passphrase']
-        if passphrase == old_post.passphrase or (cookie_id is not None
-                                                 and cookie_id == old_post.cookie_id):
+        if request.json['passphrase'] == old_post.passphrase\
+                or (request.cookies.get('id') == old_post.cookie_id):
             old_post.cookies_id = request.cookies['id']
             old_post.title = request.json['title']
             old_post.author = request.json['author']
