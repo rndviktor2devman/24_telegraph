@@ -206,29 +206,33 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
     },
 
     handlePassphrase: function(event){
-        var passphrase = {'passphrase': event.target.value};
-        var sendUrl = document.URL;
-        if(sendUrl.substr(sendUrl.length - 1) !== '/')
-        {
-            sendUrl += '/'
-        }
-        sendUrl += 'check_passphrase';
-        $.ajax({
-          url: sendUrl,
-          type: 'POST',
-          data: JSON.stringify(passphrase),
-          contentType: 'application/json;charset=UTF-8',
-          success: function(data) {
-              this.setState({editMode: true, pristine: true});
-          }.bind(this),
-          error: function(xhr, status, err) {
-              if(xhr.status == 403){
-                  this.setState({editMode: false, pristine: true});
-              }
-          }.bind(this)
-        });
+        if(!this.state.editMode || this.state.linkText.length == 0){
+            var passphrase = {'passphrase': event.target.value};
+            if(this.state.linkText.length !== 0){
+                var sendUrl = document.URL;
+                if(sendUrl.substr(sendUrl.length - 1) !== '/')
+                {
+                    sendUrl += '/'
+                }
+                sendUrl += 'check_passphrase';
+                $.ajax({
+                  url: sendUrl,
+                  type: 'POST',
+                  data: JSON.stringify(passphrase),
+                  contentType: 'application/json;charset=UTF-8',
+                  success: function(data) {
+                      this.setState({editMode: true, pristine: true});
+                  }.bind(this),
+                  error: function(xhr, status, err) {
+                      if(xhr.status == 403){
+                          this.setState({editMode: false, pristine: true});
+                      }
+                  }.bind(this)
+                });
+            }
 
-        this.setState({passphrase:event.target.value});
+            this.setState({passphrase:passphrase});
+        }
     },
 
     handleTitle: function(event){
