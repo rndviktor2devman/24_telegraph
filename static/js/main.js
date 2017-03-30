@@ -231,7 +231,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 });
             }
 
-            this.setState({passphrase:passphrase});
+            this.setState({passphrase:passphrase.passphrase});
         }
     },
 
