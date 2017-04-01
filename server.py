@@ -1,12 +1,10 @@
 from flask import Flask, render_template, request
-
 import json
 import os
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-print(os.environ['APP_SETTINGS'])
 
 from posts import Post, db
 
