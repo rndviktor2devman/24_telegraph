@@ -68,6 +68,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           title: '',
           author:'',
           story: '',
+          pristinestory: '',
           passphrase: '',
           editMode: false,
           linkText: '',
@@ -108,6 +109,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                   title: data.title,
                   author: data.author,
                   story: data.story,
+                  pristinestory: data.story,
                   passphrase: '',
                   editMode: data.edit_mode,
                   linkText: link_text,
@@ -248,8 +250,10 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
     },
 
     handleStory: function (event) {
+        var newtext = event.target.value;
         if(this.state.editMode){
-            this.setState({story:event.target.value, pristine: false})
+            var pristine_detected = newtext == this.state.pristinestory;
+            this.setState({story:newtext, pristine: pristine_detected});
         }
     },
 
