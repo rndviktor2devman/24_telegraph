@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request, jsonify
-from posts import Post, db
+from flask import Flask, render_template, request
+
 import json
+import os
 
 app = Flask(__name__)
-app.config.from_object('config')
-db.init_app(app)
+app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+print(os.environ['APP_SETTINGS'])
 
+from posts import Post, db
 
 @app.route('/')
 @app.route('/<post_id>', methods=['GET'])
@@ -78,11 +81,13 @@ def empty_post():
 
 @app.route('/get_posts')
 def get_all_posts():
-    posts = Post.query.filter_by(searchable=1).all()
     posts_data = []
-    for post in posts:
-        post_data = {'title': post.title, 'link': post.post_id}
-        posts_data.append(post_data)
+    first_post = Post.query.first()
+    if first_post is not None:
+        posts = Post.query.filter_by(searchable=True).all()
+        for post in posts:
+            post_data = {'title': post.title, 'link': post.post_id}
+            posts_data.append(post_data)
     return correct_response(posts_data)
 
 

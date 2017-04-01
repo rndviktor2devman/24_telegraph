@@ -1,9 +1,10 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from server import app
+from flask_sqlalchemy import SQLAlchemy
 import string
 import random
 
-db = SQLAlchemy()
+db = SQLAlchemy(app)
 
 
 class Post(db.Model):

@@ -1,5 +1,4 @@
-flask==0.11.1
-flask_sqlalchemy==2.2
-sqlalchemy-migrate==0.11.0
+Flask-Migrate==2.0.3
+Flask-SQLAlchemy==2.2
 gunicorn==19.6.0
-
+psycopg2==2.7.1
