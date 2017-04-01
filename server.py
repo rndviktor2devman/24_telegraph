@@ -8,6 +8,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 from posts import Post, db
 
+
 @app.route('/')
 @app.route('/<post_id>', methods=['GET'])
 def form(post_id=None):
