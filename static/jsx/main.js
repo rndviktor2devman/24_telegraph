@@ -46,6 +46,10 @@ var PostsList = React.createClass({
             })
         }
 
+        if(posts.length == 0){
+            posts.push({title: 'Не найдено', link: '/'})
+        }
+
         return(
             <div>
                 <input type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Поиск"/>
