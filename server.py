@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+from werkzeug.security import generate_password_hash, \
+    check_password_hash
 import json
 import os
 
@@ -111,7 +113,7 @@ def select_post_data(post_id):
 def check_passphrase(post_id):
     passphrase = request.json['passphrase']
     post = Post.query.filter_by(id=post_id).first()
-    if post is not None and post.passphrase == passphrase:
+    if post is not None and check_password_hash(post.passphrase, passphrase):
         return correct_response()
     else:
         return forbidden_access()
@@ -144,7 +146,7 @@ def delete_post(post_id):
     if old_post is None:
         return not_found()
     else:
-        if request.json['passphrase'] == old_post.passphrase or \
+        if check_password_hash(old_post.passphrase, request.json.get('passphrase')) or \
                 (request.cookies.get('id') == old_post.cookie_id):
             Post.query.filter_by(id=post_id).delete()
             db.session.commit()
@@ -162,7 +164,7 @@ def edit_post(post_id):
     if old_post is None:
         return not_found()
     else:
-        if request.json['passphrase'] == old_post.passphrase\
+        if check_password_hash(old_post.passphrase, request.json.get('passphrase')) \
                 or (request.cookies.get('id') == old_post.cookie_id):
             old_post.cookies_id = request.cookies['id']
             old_post.title = request.json['title']

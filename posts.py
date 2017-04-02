@@ -1,6 +1,7 @@
 from datetime import datetime
 from server import app
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
 import string
 import random
 import uuid
@@ -18,7 +19,7 @@ class Post(db.Model):
     title = db.Column(db.String(120))
     text = db.Column(db.Text)
     update_time = db.Column(db.DateTime)
-    passphrase = db.Column(db.String(80))
+    passphrase = db.Column(db.String(120))
     cookie_id = db.Column(db.String(10))
     searchable = db.Column(db.Boolean, unique=False, default=False)
 
@@ -32,7 +33,7 @@ class Post(db.Model):
         self.update_time = submit_time
         if passphrase is None or not passphrase.strip():
             passphrase = id_generator()
-        self.passphrase = passphrase
+        self.passphrase = generate_password_hash(passphrase)
         self.cookie_id = cookie_id
         self.searchable = searchable
 
