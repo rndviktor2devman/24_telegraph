@@ -3,12 +3,17 @@ from server import app
 from flask_sqlalchemy import SQLAlchemy
 import string
 import random
+import uuid
 
 db = SQLAlchemy(app)
 
 
+def uuid_gen():
+    return str(uuid.uuid4())
+
+
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String, primary_key=True, default=uuid_gen)
     author = db.Column(db.String(120))
     title = db.Column(db.String(120))
     text = db.Column(db.Text)
@@ -16,7 +21,6 @@ class Post(db.Model):
     passphrase = db.Column(db.String(80))
     cookie_id = db.Column(db.String(10))
     searchable = db.Column(db.Boolean, unique=False, default=False)
-    post_id = db.Column(db.String(10))
 
     def __init__(self, author, title, text, cookie_id, searchable,
                  passphrase=None, submit_time=None):
@@ -30,7 +34,6 @@ class Post(db.Model):
             passphrase = id_generator()
         self.passphrase = passphrase
         self.cookie_id = cookie_id
-        self.post_id = id_generator(10)
         self.searchable = searchable
 
 

@@ -15,7 +15,7 @@ def form(post_id=None):
     if post_id is None:
         return render_template('form.html')
     else:
-        post = Post.query.filter_by(post_id=post_id).first()
+        post = Post.query.filter_by(id=post_id).first()
         if post is not None:
             return render_template('form.html')
         else:
@@ -85,14 +85,14 @@ def get_all_posts():
     if first_post is not None:
         posts = Post.query.filter_by(searchable=True).all()
         for post in posts:
-            post_data = {'title': post.title, 'link': post.post_id}
+            post_data = {'title': post.title, 'link': post.id}
             posts_data.append(post_data)
     return correct_response(posts_data)
 
 
 @app.route('/<post_id>/select_data', methods=['GET'])
 def select_post_data(post_id):
-    post = Post.query.filter_by(post_id=post_id).first()
+    post = Post.query.filter_by(id=post_id).first()
     edit_mode = False
     if request.cookies is not None and 'id' in request.cookies:
         edit_mode = post.cookie_id == request.cookies['id']
@@ -101,7 +101,7 @@ def select_post_data(post_id):
         'author': post.author,
         'story': post.text,
         'edit_mode': edit_mode,
-        'linkText': post.post_id,
+        'linkText': post.id,
         'searchable': post.searchable
     }
     return correct_response(response_data)
@@ -110,7 +110,7 @@ def select_post_data(post_id):
 @app.route('/<post_id>/check_passphrase', methods=['POST'])
 def check_passphrase(post_id):
     passphrase = request.json['passphrase']
-    post = Post.query.filter_by(post_id=post_id).first()
+    post = Post.query.filter_by(id=post_id).first()
     if post is not None and post.passphrase == passphrase:
         return correct_response()
     else:
@@ -128,9 +128,9 @@ def submit_post():
     post = Post(author, title, story, cookies_id, searchable, passphrase)
     db.session.add(post)
     db.session.commit()
-    post_id = post.post_id
+    id = post.id
     response_data = {
-        'linkText': post_id
+        'linkText': id
     }
     return correct_response(response_data)
 
@@ -140,13 +140,13 @@ def delete_post(post_id):
     response_data = {
         'linkText': post_id
     }
-    old_post = Post.query.filter_by(post_id=post_id).first()
+    old_post = Post.query.filter_by(id=post_id).first()
     if old_post is None:
         return not_found()
     else:
         if request.json['passphrase'] == old_post.passphrase or \
                 (request.cookies.get('id') == old_post.cookie_id):
-            Post.query.filter_by(post_id=post_id).delete()
+            Post.query.filter_by(id=post_id).delete()
             db.session.commit()
             return correct_response(response_data)
         else:
@@ -158,7 +158,7 @@ def edit_post(post_id):
     response_data = {
         'linkText': post_id
     }
-    old_post = Post.query.filter_by(post_id=post_id).first()
+    old_post = Post.query.filter_by(id=post_id).first()
     if old_post is None:
         return not_found()
     else:
