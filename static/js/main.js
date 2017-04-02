@@ -68,7 +68,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
           title: '',
           author:'',
           story: '',
-          pristinestory: '',
+          pristinecontent: '',
           passphrase: '',
           editMode: false,
           linkText: '',
@@ -105,11 +105,12 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
               if(data.linkText.length > 0){
                   link_text = window.location.origin + '/' + data.linkText;
               }
+              var content = data.title + data.author + data.story + data.searchable;
               this.setState({
                   title: data.title,
                   author: data.author,
                   story: data.story,
-                  pristinestory: data.story,
+                  pristinecontent: content,
                   passphrase: '',
                   editMode: data.edit_mode,
                   linkText: link_text,
@@ -239,39 +240,82 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
 
     handleTitle: function(event){
         if(this.state.editMode){
-            this.setState({title:event.target.value, pristine: false})
+            var titletext = event.target.value;
+            this.setState({title: titletext});
+            this.checkContent(1, titletext);
         }
     },
 
     handleAuthor: function (event) {
         if(this.state.editMode){
-            this.setState({author:event.target.value, pristine: false})
+            var authortext = event.target.value;
+            this.setState({author: authortext});
+            this.checkContent(2, authortext);
         }
     },
 
     handleStory: function (event) {
-        var newtext = event.target.value;
         if(this.state.editMode){
-            var pristine_detected = newtext == this.state.pristinestory;
-            this.setState({story:newtext, pristine: pristine_detected});
+            var storytext = event.target.value;
+            this.setState({story: storytext});
+            this.checkContent(3, storytext);
         }
     },
 
     handleSearchable: function (event) {
         const target = event.target;
         const value =  target.checked;
-        this.setState({ searchable: value, pristine: false});
+        this.setState({ searchable: value});
+        this.checkContent(4, value);
+    },
+
+    checkContent: function (number, text) {
+        var content = '';
+        if(number === 1)
+        {
+            content += text;
+        }
+        else
+        {
+            content += this.state.title;
+        }
+        if(number === 2)
+        {
+            content += text;
+        }
+        else
+        {
+            content += this.state.author;
+        }
+        if(number === 3)
+        {
+            content += text;
+        }
+        else
+        {
+            content += this.state.story;
+        }
+        if(number === 4)
+        {
+            content += text;
+        }
+        else
+        {
+            content += this.state.searchable;
+        }
+        this.setState({pristine: content == this.state.pristinecontent});
     },
 
     render: function () {
         var editMode = this.state.editMode;
         var linkText = this.state.linkText;
+        var titleLength = this.state.title.length;
         return(
             React.createElement("div", null, 
                 editMode?(
                     React.createElement("div", null, 
                         React.createElement("div", {className: "form-group"}, 
-                            React.createElement("input", {className: "form-control", placeholder: "Заголовок", value: this.state.title, onChange: this.handleTitle})
+                            React.createElement("input", {className: "form-control", placeholder: "Заголовок(обязателен)", value: this.state.title, onChange: this.handleTitle})
                         ), 
                         React.createElement("div", {className: "form-group"}, 
                             React.createElement("input", {className: "form-control", placeholder: "Подпись", value: this.state.author, onChange: this.handleAuthor})
@@ -304,7 +348,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                         React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", checked: this.state.searchable, onChange: this.handleSearchable}))
                     ), 
                     React.createElement("div", {className: "form-group"}, 
-                        React.createElement("button", {className: "btn btn-primary", disabled: !this.state.editMode, onClick: this.submitPost, type: "submit"}, "Опубликовать")
+                        React.createElement("button", {className: "btn btn-primary", disabled: titleLength == 0, onClick: this.submitPost, type: "submit"}, "Опубликовать")
                     )
                 )
                 ), 
@@ -315,7 +359,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", {className: "col-xs-2"}, 
-                            React.createElement("button", {className: "btn btn-primary", disabled: this.state.pristine, onClick: this.updatePost}, "Обновить")
+                            React.createElement("button", {className: "btn btn-primary", disabled: (titleLength == 0) || this.state.pristine, onClick: this.updatePost}, "Обновить")
                         ), 
                         React.createElement("div", {className: "col-xs-2"}, 
                             React.createElement("button", {className: "btn btn-primary", onClick: this.newPost}, "Новый")
