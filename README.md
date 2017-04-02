@@ -6,7 +6,7 @@ Simplified clone of [telegraph](http://telegra.ph/)
 
 The code is written for educational purposes. Training course for web-developers - [DEVMAN.org](https://devman.org)
 
-The running online site could be verified [here](https://whispering-depths-75337.herokuapp.com/)
+The running online site could be verified [here](https://whispering-depths-75337-pro.herokuapp.com/)
 
 ## Requirements:
 Before start project we need to setup environment:
