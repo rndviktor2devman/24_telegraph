@@ -1,6 +1,15 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+DEBUG = False
+DEVELOPMENT = False
+TESTING = False
+CSRF_ENABLED = False
+SECRET_KEY = ''
+SQLALCHEMY_DATABASE_URI = ''
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_MIGRATE_REPO = ''
+
 
 class Config(object):
     DEBUG = False
