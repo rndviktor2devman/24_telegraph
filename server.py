@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from werkzeug.security import check_password_hash
 import json
 import os
@@ -58,14 +58,6 @@ def forbidden_access():
     )
 
 
-def correct_response(data=None):
-    return app.response_class(
-        response=json.dumps(data),
-        status=200,
-        mimetype='application/json'
-    )
-
-
 @app.route('/empty_post')
 def empty_post():
     response_data = {
@@ -77,7 +69,7 @@ def empty_post():
         'linkText': '',
         'searchable': True
     }
-    return correct_response(response_data)
+    return jsonify(response_data)
 
 
 @app.route('/get_posts')
@@ -89,7 +81,7 @@ def get_all_posts():
         for post in posts:
             post_data = {'title': post.title, 'link': post.id}
             posts_data.append(post_data)
-    return correct_response(posts_data)
+    return jsonify(posts_data)
 
 
 @app.route('/<post_id>/select_data', methods=['GET'])
@@ -106,7 +98,7 @@ def select_post_data(post_id):
         'linkText': post.id,
         'searchable': post.searchable
     }
-    return correct_response(response_data)
+    return jsonify(response_data)
 
 
 @app.route('/<post_id>/check_passphrase', methods=['POST'])
@@ -114,7 +106,7 @@ def check_passphrase(post_id):
     passphrase = request.json['passphrase']
     post = Post.query.filter_by(id=post_id).first()
     if post is not None and check_password_hash(post.passphrase, passphrase):
-        return correct_response()
+        return jsonify()
     else:
         return forbidden_access()
 
@@ -134,7 +126,7 @@ def submit_post():
     response_data = {
         'linkText': id
     }
-    return correct_response(response_data)
+    return jsonify(response_data)
 
 
 @app.route('/<post_id>/delete', methods=['POST'])
@@ -150,7 +142,7 @@ def delete_post(post_id):
                 (request.cookies.get('id') == old_post.cookie_id):
             Post.query.filter_by(id=post_id).delete()
             db.session.commit()
-            return correct_response(response_data)
+            return jsonify(response_data)
         else:
             return forbidden_access()
 
@@ -172,7 +164,7 @@ def edit_post(post_id):
             old_post.text = request.json['story']
             old_post.searchable = request.json['searchable']
             db.session.commit()
-            return correct_response(response_data)
+            return jsonify(response_data)
         else:
             return forbidden_access()
 
