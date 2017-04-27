@@ -109,7 +109,12 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
               if(data.linkText.length > 0){
                   link_text = window.location.origin + '/' + data.linkText;
               }
-              var content = data.title + data.author + data.story + data.searchable;
+              var content ={
+                  'title': data.title,
+                  'author': data.author,
+                  'story': data.story,
+                  'searchable': data.searchable
+              };
               this.setState({
                   title: data.title,
                   author: data.author,
@@ -246,7 +251,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         if(this.state.editMode){
             var titletext = event.target.value;
             this.setState({title: titletext});
-            this.checkContent(1, titletext);
+            this.verifyPristine();
         }
     },
 
@@ -254,7 +259,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         if(this.state.editMode){
             var authortext = event.target.value;
             this.setState({author: authortext});
-            this.checkContent(2, authortext);
+            this.verifyPristine();
         }
     },
 
@@ -262,7 +267,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         if(this.state.editMode){
             var storytext = event.target.value;
             this.setState({story: storytext});
-            this.checkContent(3, storytext);
+            this.verifyPristine();
         }
     },
 
@@ -270,43 +275,16 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
         const target = event.target;
         const value =  target.checked;
         this.setState({ searchable: value});
-        this.checkContent(4, value);
+        this.verifyPristine();
     },
 
-    checkContent: function (number, text) {
-        var content = '';
-        if(number === 1)
-        {
-            content += text;
-        }
-        else
-        {
-            content += this.state.title;
-        }
-        if(number === 2)
-        {
-            content += text;
-        }
-        else
-        {
-            content += this.state.author;
-        }
-        if(number === 3)
-        {
-            content += text;
-        }
-        else
-        {
-            content += this.state.story;
-        }
-        if(number === 4)
-        {
-            content += text;
-        }
-        else
-        {
-            content += this.state.searchable;
-        }
+    verifyPristine: function () {
+        var content ={
+            'title': this.state.title,
+            'author': this.state.author,
+            'story': this.state.story,
+            'searchable': this.state.searchable
+        };
         this.setState({pristine: content == this.state.pristinecontent});
     },
 
