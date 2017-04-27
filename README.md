@@ -20,7 +20,7 @@ python3 db_create.py
 ## Usage:
 Start site:
 ```
-python3 server.py
+python3 manage.py runserver
 ```
 and check the [site](http://localhost:5000)
 
