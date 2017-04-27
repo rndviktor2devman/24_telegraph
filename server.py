@@ -81,7 +81,7 @@ def select_post_data(post_id):
 def check_passphrase(post_id):
     passphrase = request.json['passphrase']
     post = Post.query.filter_by(id=post_id).first()
-    if post is not None and check_password_hash(post.passphrase, passphrase):
+    if post is not None and check_password_hash(post.passphrase_hash, passphrase):
         return jsonify()
     else:
         abort(403)
@@ -114,7 +114,7 @@ def delete_post(post_id):
     if old_post is None:
         abort(404)
     else:
-        if check_password_hash(old_post.passphrase, request.json.get('passphrase')) or \
+        if check_password_hash(old_post.passphrase_hash, request.json.get('passphrase')) or \
                 (request.cookies.get('id') == old_post.cookie_id):
             Post.query.filter_by(id=post_id).delete()
             db.session.commit()
@@ -132,7 +132,7 @@ def edit_post(post_id):
     if old_post is None:
         abort(404)
     else:
-        if check_password_hash(old_post.passphrase, request.json.get('passphrase')) \
+        if check_password_hash(old_post.passphrase_hash, request.json.get('passphrase')) \
                 or (request.cookies.get('id') == old_post.cookie_id):
             old_post.cookies_id = request.cookies['id']
             old_post.title = request.json['title']
