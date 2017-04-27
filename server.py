@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, abort
 from werkzeug.security import check_password_hash
 import json
 import os
@@ -32,30 +32,6 @@ def error():
 @app.route('/403_page')
 def error_forbidden():
     return render_template('403.html'), 403
-
-
-def not_found():
-    message = {
-        'status': 404,
-        'message': 'Not Found:' + request.url
-    }
-    return app.response_class(
-        response=json.dumps(message),
-        status=404,
-        mimetype='application/json'
-    )
-
-
-def forbidden_access():
-    message = {
-        'status': 403,
-        'message': 'Forbidden:' + request.url
-    }
-    return app.response_class(
-        response=json.dumps(message),
-        status=403,
-        mimetype='application/json'
-    )
 
 
 @app.route('/empty_post')
@@ -108,7 +84,7 @@ def check_passphrase(post_id):
     if post is not None and check_password_hash(post.passphrase, passphrase):
         return jsonify()
     else:
-        return forbidden_access()
+        abort(403)
 
 
 @app.route('/post', methods=['POST'])
@@ -136,7 +112,7 @@ def delete_post(post_id):
     }
     old_post = Post.query.filter_by(id=post_id).first()
     if old_post is None:
-        return not_found()
+        abort(404)
     else:
         if check_password_hash(old_post.passphrase, request.json.get('passphrase')) or \
                 (request.cookies.get('id') == old_post.cookie_id):
@@ -144,7 +120,7 @@ def delete_post(post_id):
             db.session.commit()
             return jsonify(response_data)
         else:
-            return forbidden_access()
+            abort(403)
 
 
 @app.route('/<post_id>/update', methods=['POST'])
@@ -154,7 +130,7 @@ def edit_post(post_id):
     }
     old_post = Post.query.filter_by(id=post_id).first()
     if old_post is None:
-        return not_found()
+        abort(404)
     else:
         if check_password_hash(old_post.passphrase, request.json.get('passphrase')) \
                 or (request.cookies.get('id') == old_post.cookie_id):
@@ -166,7 +142,7 @@ def edit_post(post_id):
             db.session.commit()
             return jsonify(response_data)
         else:
-            return forbidden_access()
+            abort(403)
 
 
 if __name__ == "__main__":
