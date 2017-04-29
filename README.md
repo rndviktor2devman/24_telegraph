@@ -13,9 +13,15 @@ Before start project we need to setup environment:
 ```
 pip3 install -r requirements.txt
 ```
-and create database:
+Also we need to setup postgresql db(see help for your system) and create database:
 ```
-python3 db_create.py
+python3 manage.py db init
+```
+```
+python3 manage.py db migrate
+```
+```
+python3 manage.py db upgrade
 ```
 ## Usage:
 Start site:
