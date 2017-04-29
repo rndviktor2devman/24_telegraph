@@ -87,7 +87,7 @@ var PostsEditor = React.createClass({
             var possible_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
             for( var i=0; i < 10; i++ )
-                auth_id += possible_chars.charAt(Math.floor(Math.random() * possible_letters.length));
+                auth_id += possible_chars.charAt(Math.floor(Math.random() * possible_chars.length));
             $.cookie("auth_id", auth_id);
         }
     },
