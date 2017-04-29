@@ -83,12 +83,12 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
 
     checkCookie: function(){
         if(!$.cookie("auth_id")){
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var auth_id = "";
+            var possible_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
             for( var i=0; i < 10; i++ )
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            $.cookie("auth_id", text);
+                auth_id += possible_letters.charAt(Math.floor(Math.random() * possible_letters.length));
+            $.cookie("auth_id", auth_id);
         }
     },
 
