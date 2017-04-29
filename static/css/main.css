@@ -105,6 +105,9 @@ WebKit inertia scrolling is being added here for any present/future devices that
   user-select: none;
 }
 
+.error-field{
+    color: red;
+}
 
 .list-item {
     color: black;

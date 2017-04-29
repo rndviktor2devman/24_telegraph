@@ -74,6 +74,7 @@ var PostsEditor = React.createClass({
           pristinecontent: '',
           passphrase: '',
           editMode: false,
+          passphaseError: false,
           linkText: '',
           searchable: true,
           pristine: true
@@ -221,11 +222,11 @@ var PostsEditor = React.createClass({
         window.location.href = '/'
     },
 
-    handlePassphrase: function(event){
-        if(!this.state.editMode || this.state.linkText.length == 0){
-            var passphrase = {'passphrase': event.target.value};
+    handleInputKeyDown: function (event) {
+        if(event.keyCode === 13){
             if(this.state.linkText.length !== 0){
                 var sendUrl = document.URL;
+                var passphrase = {'passphrase': this.state.passphrase};
                 if(sendUrl.substr(sendUrl.length - 1) !== '/')
                 {
                     sendUrl += '/'
@@ -237,17 +238,21 @@ var PostsEditor = React.createClass({
                   data: JSON.stringify(passphrase),
                   contentType: 'application/json;charset=UTF-8',
                   success: function(data) {
-                      this.setState({editMode: true, pristine: true});
+                      this.setState({editMode: true, pristine: true, passphaseError: false});
                   }.bind(this),
                   error: function(xhr, status, err) {
                       if(xhr.status == 403){
-                          this.setState({editMode: false, pristine: true});
+                          this.setState({editMode: false, pristine: true, passphaseError: true});
                       }
                   }.bind(this)
                 });
             }
+        }
+    },
 
-            this.setState({passphrase:passphrase.passphrase});
+    handlePassphrase: function(event){
+        if(!this.state.editMode || this.state.linkText.length == 0){
+            this.setState({passphrase:event.target.value});
         }
     },
 
@@ -296,6 +301,7 @@ var PostsEditor = React.createClass({
         var editMode = this.state.editMode;
         var linkText = this.state.linkText;
         var titleLength = this.state.title.length;
+        var passphraseError = this.state.passphaseError;
         return(
             <div>
                 {editMode?(
@@ -321,8 +327,9 @@ var PostsEditor = React.createClass({
                     </div>
                 </div>
                 )}
-                <div className="form-group">
-                    <input name="passphrase" className="form-control input-field" type="password" onChange={this.handlePassphrase} placeholder="Пароль для редактирования(на случай утери cookies)" value={this.state.passphrase}/>
+                <div className={passphraseError? "has-error": "form-group"}>
+                    <input name="passphrase" className="form-control input-field" type="password" onChange={this.handlePassphrase} onKeyDown={this.handleInputKeyDown} placeholder="Пароль для редактирования(на случай утери cookies)" value={this.state.passphrase}/>
+                    {passphraseError? <span className="error-field">Несовпадение пароля</span>: null}
                 </div>
                 {linkText.length > 0 ?(
                 <div className="form-group">
