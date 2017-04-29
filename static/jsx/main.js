@@ -80,10 +80,19 @@ var PostsEditor = React.createClass({
       };
     },
 
-    componentDidMount: function () {
-        if(document.cookie.indexOf('id=') == -1){
-            document.cookie = "id=" + Date.now().toString(32);
+    checkCookie: function(){
+        if(!$.cookie("auth_id")){
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for( var i=0; i < 10; i++ )
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            $.cookie("auth_id", text);
         }
+    },
+
+    componentDidMount: function () {
+        this.checkCookie();
 
         var sendUrl = document.URL;
         if(window.location.pathname == '/')
@@ -133,9 +142,8 @@ var PostsEditor = React.createClass({
     },
 
     submitPost: function () {
-        if(document.cookie.indexOf('id=') == -1){
-            document.cookie = "id=" + Date.now().toString(32);
-        }
+        //at post submission user should have cookie
+        this.checkCookie();
         var sendUrl = document.URL + 'post';
         $.ajax({
           url: sendUrl,
@@ -187,9 +195,6 @@ var PostsEditor = React.createClass({
             sendUrl += '/'
         }
         sendUrl = sendUrl + 'update';
-        if(document.cookie.indexOf('id=') == -1){
-            document.cookie = "id=" + Date.now().toString(32);
-        }
         $.ajax({
           url: sendUrl,
           type: 'POST',

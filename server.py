@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, jsonify, abort
 from werkzeug.security import check_password_hash
-import json
-import os
 
 app = Flask(__name__, instance_relative_config=True)
 
@@ -63,9 +61,7 @@ def get_all_posts():
 @app.route('/<post_id>/select_data', methods=['GET'])
 def select_post_data(post_id):
     post = Post.query.filter_by(id=post_id).first()
-    edit_mode = False
-    if request.cookies is not None and 'id' in request.cookies:
-        edit_mode = post.cookie_id == request.cookies['id']
+    edit_mode = post.cookie_id == request.cookies.get('auth_id')
     response_data = {
         'title': post.title,
         'author': post.author,
@@ -89,7 +85,7 @@ def check_passphrase(post_id):
 
 @app.route('/post', methods=['POST'])
 def submit_post():
-    cookies_id = request.cookies['id']
+    cookies_id = request.cookies.get('auth_id')
     title = request.json['title']
     author = request.json['author']
     story = request.json['story']
@@ -115,7 +111,7 @@ def delete_post(post_id):
         abort(404)
     else:
         if check_password_hash(old_post.passphrase_hash, request.json.get('passphrase')) or \
-                (request.cookies.get('id') == old_post.cookie_id):
+                (request.cookies.get('auth_id') == old_post.cookie_id):
             Post.query.filter_by(id=post_id).delete()
             db.session.commit()
             return jsonify(response_data)
@@ -133,8 +129,7 @@ def edit_post(post_id):
         abort(404)
     else:
         if check_password_hash(old_post.passphrase_hash, request.json.get('passphrase')) \
-                or (request.cookies.get('id') == old_post.cookie_id):
-            old_post.cookies_id = request.cookies['id']
+                or (request.cookies.get('auth_id') == old_post.cookie_id):
             old_post.title = request.json['title']
             old_post.author = request.json['author']
             old_post.text = request.json['story']
