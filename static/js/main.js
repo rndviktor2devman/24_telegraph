@@ -53,11 +53,11 @@ var PostsList = React.createClass({displayName: "PostsList",
 
         return(
             React.createElement("div", null, 
-                React.createElement("input", {type: "text", value: this.state.searchString, onChange: this.handleChange, placeholder: "Поиск"}), 
-                React.createElement("ul", null, 
+                React.createElement("input", {type: "text", className: "input-field", value: this.state.searchString, onChange: this.handleChange, placeholder: "Поиск"}), 
+                React.createElement("ul", {className: "list-item"}, 
                     
                         posts.map(function (post) {
-                            return React.createElement("li", null, React.createElement("a", {href: post.link}, post.title))
+                            return React.createElement("li", null, React.createElement("a", {className: "reference-clear", href: post.link}, post.title))
                     })
                 )
             )
@@ -94,7 +94,6 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
 
     componentDidMount: function () {
         this.checkCookie();
-
 
         var sendUrl = document.URL;
         if(window.location.pathname == '/')
@@ -303,20 +302,20 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 editMode?(
                     React.createElement("div", null, 
                         React.createElement("div", {className: "form-group"}, 
-                            React.createElement("input", {className: "form-control", placeholder: "Заголовок(обязателен)", value: this.state.title, onChange: this.handleTitle})
+                            React.createElement("input", {className: "form-control input-field", placeholder: "Заголовок(обязателен)", value: this.state.title, onChange: this.handleTitle})
                         ), 
                         React.createElement("div", {className: "form-group"}, 
-                            React.createElement("input", {className: "form-control", placeholder: "Подпись", value: this.state.author, onChange: this.handleAuthor})
+                            React.createElement("input", {className: "form-control input-field", placeholder: "Подпись", value: this.state.author, onChange: this.handleAuthor})
                         ), 
                         React.createElement("div", {className: "form-group"}, 
-                          React.createElement("textarea", {className: "form-control", rows: "10", placeholder: "Ваша история", value: this.state.story, onChange: this.handleStory})
+                          React.createElement("textarea", {className: "form-control input-field", rows: "10", placeholder: "Ваша история", value: this.state.story, onChange: this.handleStory})
                         )
                     )
                 ):(
                 React.createElement("div", null, 
                     React.createElement("div", {className: "form-group"}, 
-                        React.createElement("h1", null, "Название: ", this.state.title), 
-                        React.createElement("h3", null, "Автор: ", this.state.author)
+                        React.createElement("h1", {className: "title"}, "Название: ", this.state.title), 
+                        React.createElement("h3", {className: "bigger-text"}, "Автор: ", this.state.author)
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("textarea", {className: "form-control non-resize-text-area", rows: "10", value: this.state.story})
@@ -324,16 +323,16 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 )
                 ), 
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("input", {name: "passphrase", className: "form-control", type: "password", onChange: this.handlePassphrase, placeholder: "Пароль для редактирования(на случай утери cookies)", value: this.state.passphrase})
+                    React.createElement("input", {name: "passphrase", className: "form-control input-field", type: "password", onChange: this.handlePassphrase, placeholder: "Пароль для редактирования(на случай утери cookies)", value: this.state.passphrase})
                 ), 
                 linkText.length > 0 ?(
                 React.createElement("div", {className: "form-group"}, 
-                    React.createElement("h3", null, React.createElement("a", {href: linkText}, linkText))
+                    React.createElement("h3", {className: "bigger-text"}, React.createElement("a", {className: "reference-clear", href: linkText}, linkText))
                 )
                 ):(
                 React.createElement("div", null, 
                     React.createElement("div", {className: "form-group"}, 
-                        React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", checked: this.state.searchable, onChange: this.handleSearchable}))
+                        React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", className: "input-field", checked: this.state.searchable, onChange: this.handleSearchable}))
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("button", {className: "btn btn-primary", disabled: titleLength == 0, onClick: this.submitPost, type: "submit"}, "Опубликовать")
@@ -343,7 +342,7 @@ var PostsEditor = React.createClass({displayName: "PostsEditor",
                 editMode && linkText.length > 0 ?(
                 React.createElement("div", null, 
                     React.createElement("div", {className: "form-group"}, 
-                        React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", checked: this.state.searchable, onChange: this.handleSearchable}))
+                        React.createElement("label", {className: "form-control"}, "Доступен для поиска: ", React.createElement("input", {type: "checkbox", className: "input-field", checked: this.state.searchable, onChange: this.handleSearchable}))
                     ), 
                     React.createElement("div", {className: "form-group"}, 
                         React.createElement("div", {className: "col-xs-2"}, 

@@ -52,11 +52,11 @@ var PostsList = React.createClass({
 
         return(
             <div>
-                <input type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Поиск"/>
-                <ul>
+                <input type="text" className="input-field" value={this.state.searchString} onChange={this.handleChange} placeholder="Поиск"/>
+                <ul className="list-item">
                     {
                         posts.map(function (post) {
-                            return <li><a href={post.link}>{post.title}</a></li>
+                            return <li><a className="reference-clear" href={post.link}>{post.title}</a></li>
                     })}
                 </ul>
             </div>
@@ -301,20 +301,20 @@ var PostsEditor = React.createClass({
                 {editMode?(
                     <div>
                         <div className="form-group">
-                            <input className="form-control" placeholder="Заголовок(обязателен)" value={this.state.title} onChange={this.handleTitle}/>
+                            <input className="form-control input-field"  placeholder="Заголовок(обязателен)" value={this.state.title} onChange={this.handleTitle}/>
                         </div>
                         <div className="form-group">
-                            <input className="form-control"  placeholder="Подпись" value={this.state.author} onChange={this.handleAuthor}/>
+                            <input className="form-control input-field"  placeholder="Подпись" value={this.state.author} onChange={this.handleAuthor}/>
                         </div>
                         <div className="form-group">
-                          <textarea className="form-control"  rows="10" placeholder="Ваша история" value={this.state.story} onChange={this.handleStory}/>
+                          <textarea className="form-control input-field"  rows="10" placeholder="Ваша история" value={this.state.story} onChange={this.handleStory}/>
                         </div>
                     </div>
                 ):(
                 <div>
                     <div className="form-group">
-                        <h1>Название: {this.state.title}</h1>
-                        <h3>Автор: {this.state.author}</h3>
+                        <h1 className="title">Название: {this.state.title}</h1>
+                        <h3 className="bigger-text">Автор: {this.state.author}</h3>
                     </div>
                     <div className="form-group">
                         <textarea className="form-control non-resize-text-area" rows="10" value={this.state.story}/>
@@ -322,16 +322,16 @@ var PostsEditor = React.createClass({
                 </div>
                 )}
                 <div className="form-group">
-                    <input name="passphrase" className="form-control" type="password" onChange={this.handlePassphrase} placeholder="Пароль для редактирования(на случай утери cookies)" value={this.state.passphrase}/>
+                    <input name="passphrase" className="form-control input-field" type="password" onChange={this.handlePassphrase} placeholder="Пароль для редактирования(на случай утери cookies)" value={this.state.passphrase}/>
                 </div>
                 {linkText.length > 0 ?(
                 <div className="form-group">
-                    <h3><a href={linkText}>{linkText}</a></h3>
+                    <h3 className="bigger-text"><a className="reference-clear" href={linkText}>{linkText}</a></h3>
                 </div>
                 ):(
                 <div>
                     <div className="form-group">
-                        <label className="form-control">Доступен для поиска: <input type="checkbox"  checked={this.state.searchable} onChange={this.handleSearchable} /></label>
+                        <label className="form-control">Доступен для поиска: <input type="checkbox" className="input-field" checked={this.state.searchable} onChange={this.handleSearchable} /></label>
                     </div>
                     <div className="form-group">
                         <button className="btn btn-primary" disabled={titleLength == 0} onClick={this.submitPost} type="submit">Опубликовать</button>
@@ -341,7 +341,7 @@ var PostsEditor = React.createClass({
                 {editMode && linkText.length > 0 ?(
                 <div>
                     <div className="form-group">
-                        <label className="form-control">Доступен для поиска: <input type="checkbox"  checked={this.state.searchable} onChange={this.handleSearchable}/></label>
+                        <label className="form-control">Доступен для поиска: <input type="checkbox" className="input-field" checked={this.state.searchable} onChange={this.handleSearchable}/></label>
                     </div>
                     <div className="form-group">
                         <div className="col-xs-2">

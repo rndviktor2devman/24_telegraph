@@ -62,7 +62,7 @@ WebKit inertia scrolling is being added here for any present/future devices that
     flex: 1;
 }
 
-input {
+.input-field {
   color: black;
   text-align: left;
   border: 5px solid #ebebeb;
@@ -72,19 +72,19 @@ input {
   margin-bottom: 20px;
 }
 
-a {
+.reference-clear {
   color: inherit;
   text-decoration: inherit;
 }
 
-h1 {
+.title {
     font-size: 20px;
     color: black;
     border: 0 none;
     margin: 10px;
 }
 
-h3 {
+.bigger-text {
     font-size: 16px;
     color: black;
     border: 0 none;
@@ -106,7 +106,7 @@ h3 {
 }
 
 
-ul {
+.list-item {
     color: black;
     margin-left: 20px;
     text-align: left;
