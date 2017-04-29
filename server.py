@@ -4,7 +4,6 @@ from werkzeug.security import check_password_hash
 app = Flask(__name__, instance_relative_config=True)
 
 app.config.from_pyfile('config.py')
-app.config.from_envvar('APP_CONFIG_FILE')
 
 from posts import Post, db
 

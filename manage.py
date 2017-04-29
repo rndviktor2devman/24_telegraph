@@ -5,7 +5,6 @@ from server import app
 from posts import db
 
 app.config.from_pyfile('config.py')
-app.config.from_envvar('APP_CONFIG_FILE')
 
 migrate = Migrate(app, db)
 manager = Manager(app)
